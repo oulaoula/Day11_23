@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.order.dao.OrdersMapper">
+  <resultMap id="BaseResultMap" type="com.order.entity.Orders">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="number" jdbcType="VARCHAR" property="number" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="note" jdbcType="VARCHAR" property="note" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, number, createtime, note
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from orders
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from orders
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.order.entity.Orders">
+    insert into orders (id, user_id, number, 
+      createtime, note)
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{number,jdbcType=VARCHAR}, 
+      #{createtime,jdbcType=TIMESTAMP}, #{note,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.order.entity.Orders">
+    insert into orders
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="number != null">
+        number,
+      </if>
+      <if test="createtime != null">
+        createtime,
+      </if>
+      <if test="note != null">
+        note,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="number != null">
+        #{number,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="note != null">
+        #{note,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.order.entity.Orders">
+    update orders
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="number != null">
+        number = #{number,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="note != null">
+        note = #{note,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.order.entity.Orders">
+    update orders
+    set user_id = #{userId,jdbcType=INTEGER},
+      number = #{number,jdbcType=VARCHAR},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      note = #{note,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <resultMap type="com.order.entity.Orders" id="orderUserResultMap">
+		<id column="id" property="id"/>
+		<result column="user_id" property="userId"/>
+		<result column="number" property="number"/>
+		<result column="createtime" property="createtime"/>
+		<result column="note" property="note"/>
+		<!-- 一对一关联映射 -->
+		<!-- 
+		property:Orders对象的user属性
+		javaType：user属性对应 的类型
+		 -->
+		<association property="user" javaType="com.order.entity.Users">
+			<!-- column:user表的主键对应的列  property：user对象中id属性-->
+			<id column="user_id" property="id"/>
+			<result column="username" property="username"/>
+			<result column="address" property="address"/>
+			<result column="sex" property="sex"/>
+			<result column="birthday" property="birthday"/>
+		</association>
+	</resultMap>
+	<select id="findOrdersWithUserResultMap" resultMap="orderUserResultMap">
+		SELECT
+			o.id,
+			o.user_id,
+			o.number,
+			o.createtime,
+			o.note,
+			u.username,
+			u.address,
+			u.sex,
+			u.birthday
+		FROM
+			orders o
+		JOIN `users` u ON u.id = o.user_id
+	</select>
+</mapper>

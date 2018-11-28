@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- 加载 db.properties配置信息 -->
+<!-- 	<properties resource="db.properties"></properties> -->
+	<settings>
+		<setting name="logImpl" value="LOG4J"/>
+	</settings> 
+	<!-- typeAliases 类型别名 实体类型 -->
+<!-- 	<typeAliases>
+		<typeAlias alias="model" type="com.model.entity.model" />
+	</typeAliases>
+ -->	
+	<!-- <mappers>
+		<mapper resource="com/model/mapper/ModelMapper.xml" />
+	</mappers> -->
+	<!-- 分页插件 -->
+	<plugins>
+		<plugin interceptor="com.github.pagehelper.PageHelper">
+			<property name="dialect" value="mysql" />
+		</plugin>
+	</plugins>
+</configuration>
